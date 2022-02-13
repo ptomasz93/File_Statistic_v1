@@ -7,7 +7,7 @@
 
 #include "line_counter.hpp"
 
-
+inline std::mutex counter_mutex;
 
 
 void count_lines(std::string dir_entry,  unsigned *counteralllines, unsigned *counterallnonemptylines)
