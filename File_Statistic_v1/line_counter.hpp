@@ -19,7 +19,7 @@
 #include <mutex>
 
 
-inline std::mutex counter_mutex;
+
 
 
 namespace fs = std::filesystem;
