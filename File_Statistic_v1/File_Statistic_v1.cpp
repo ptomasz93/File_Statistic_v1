@@ -16,7 +16,7 @@
 
 
 #include "line_counter.hpp"
-#include "thread_pool.hpp" // ready library from GitHub
+//#include "thread_pool.hpp" // ready library from GitHub
 
 
 namespace fs = std::filesystem;
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     unsigned counteralllines = 0; //global counter number of lines
     unsigned counterallnonemptylines = 0; //global counter number of non-empty lines
     std::string filepath, defaultpath; // path to file
-    thread_pool pool;
+   // thread_pool pool;
 
     //If file path was not given on startup
     if (argc < 2)
@@ -58,17 +58,11 @@ int main(int argc, char* argv[])
 
     auto start = std::chrono::high_resolution_clock::now();//take actual time (ms) for speed test
      //std::cout<< std::setw(110)<<"PATH"<< std::setw(30)<<"number of lines:" << std::setw(30)<< "nomber of no empty lines:"<<std::endl;//index for statistics for each file
-    for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator(defaultpath)) // Recursive searching files
-    {
-        if (!dir_entry.is_directory()) // if is not catalog
-        {
-            counterfiles++;  //increment counters of files
-            filepath = dir_entry.path().string();// conversion from path to string
-            pool.push_task(count_lines, filepath, &counteralllines, &counterallnonemptylines); //push function to queue task for threats
-        }
-    }
-    pool.wait_for_tasks();// waiting for end of queue task
+  
+    directory_browsing(defaultpath, counterfiles, &counteralllines, &counterallnonemptylines);
+    
     auto finish = std::chrono::high_resolution_clock::now();//take time of end for seed test
+
     //print of statistic
     std::cout << "nomber of files:  " << counterfiles << std::endl;
     std::cout << "nomber lines in all files:  " << counteralllines << std::endl;
@@ -96,7 +90,7 @@ int main(int argc, char* argv[])
             count_lines(filepath, &counteralllines, &counterallnonemptylines); //push function to queue task for threats
         }
     }
-    pool.wait_for_tasks();// waiting for end of queue task
+   
     finish = std::chrono::high_resolution_clock::now();//take time of end for seed test
     //print of statistic
     std::cout << "nomber of files:  " << counterfiles << std::endl;

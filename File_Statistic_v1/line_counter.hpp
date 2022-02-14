@@ -17,12 +17,13 @@
 #include <atomic>
 #include <chrono>
 #include <mutex>
-
+#include "thread_pool.hpp" // ready library from GitHub
 
 
 
 
 namespace fs = std::filesystem;
+
 
 
 /**
@@ -37,5 +38,18 @@ namespace fs = std::filesystem;
  */
 void count_lines(std::string dir_entry,  unsigned *counteralllines, unsigned *counterallnonemptylines);
 
+
+/**
+ * @brief Function recursive browsing the folder. For the files in the folder function run void count_lines
+ *
+ *
+ * @param std::string dir_entry               - Path to file
+ * @param unsigned &counterfiles			  - Global cunter of all  files
+ * @param unsigned *counteralllines           - Global cunter of all lines in all files
+ * @param unsigned *counterallnonemptylines   - Global counter of all non-empty  lines
+ *
+ */
+
+void directory_browsing(std::string defaultpath, unsigned &counterfiles, unsigned* counteralllines, unsigned* counterallnonemptylines);
 
 #endif /* LINE_COUNTER_HPP_ */
