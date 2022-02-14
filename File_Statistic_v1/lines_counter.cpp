@@ -8,7 +8,7 @@
 #include "line_counter.hpp"
 
 inline std::mutex counter_mutex;
-
+thread_pool pool;
 
 void count_lines(std::string dir_entry,  unsigned *counteralllines, unsigned *counterallnonemptylines)
 {
@@ -40,3 +40,17 @@ void count_lines(std::string dir_entry,  unsigned *counteralllines, unsigned *co
 
 
 
+void directory_browsing(std::string defaultpath, unsigned &counterfiles, unsigned* counteralllines, unsigned* counterallnonemptylines)
+{
+    std::string filepath;
+    for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator(defaultpath)) // Recursive searching files
+    {
+        if (!dir_entry.is_directory()) // if is not catalog
+        {
+            counterfiles++;  //increment counters of files
+            filepath = dir_entry.path().string();// conversion from path to string
+            pool.push_task(count_lines, filepath, counteralllines, counterallnonemptylines); //push function to queue task for threats
+        }
+    }
+    pool.wait_for_tasks();// waiting for end of queue task
+}
